@@ -1,0 +1,37 @@
+#!/usr/bin/python
+
+import web
+import os
+import re
+import os
+from cgroup import *
+import cgi,cgitb  
+from types import MethodType
+#myGroups = Mygroups().group_list()
+urls = ["/groups","ListofGroup"]
+def GET(self): return "hello"
+#for group in myGroups:
+#	group_path = "/groups/"+group
+	#urls.append(group_path)
+	#urls.append(group)
+	#check = type(group,(object,),{})
+#obj.method = GET
+	#check.GET = MethodType(GET, check , group )
+	
+#urls = ("/groups", "ListofGroup",
+#        "/groups/.*", "ListofProcessforGroup"
+#)
+app = web.application(urls, globals())
+class ListofGroup:
+    def GET(self):
+       # server_name = os.environ['SERVER_NAME']
+        return 'https://' + os.environ['SERVER_NAME'] + os.environ['REQUEST_URI'] 
+
+#class ListofProcessforGroup:
+#   def GET(self):
+#        return urls
+
+
+web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
+if __name__ == "__main__":
+    app.run()
