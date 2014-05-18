@@ -5,9 +5,13 @@ from cgroup import *
 import os
 from subprocess import Popen, PIPE
 from find_task import *
+def cpu_usage_for_proccess(id):
+	cmd = "ps aux | awk '{ if( $2 ==" + str(id) + ") print $3 }'"
+    	cpu_usage = os.popen(cmd).read().rstrip('\n');
+	return cpu_usage
 myGroups = Mygroups().group_list()
 urls = ["/groups","ListofGroup" , "/groups/.*" , "GroupHandler" ]
-	
+dict = {}	
 app = web.application(urls, globals())
 class ListofGroup:
     def GET(self):
@@ -20,7 +24,11 @@ class GroupHandler:
         group = uri.split('/')[2]
 	if myGroups.count(group):
 		myProcess = FindTask()
-		return myProcess.findTasks(group)
+  		myList = myProcess.findTasks(group)
+		for process in myList:
+			cpu_usage = cpu_usage_for_proccess(process)
+                	dict[process] = cpu_usage
+		return dict
 	else:
 		return "not found"
 	
